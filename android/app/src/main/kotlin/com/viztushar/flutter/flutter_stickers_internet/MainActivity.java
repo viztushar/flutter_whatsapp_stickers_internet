@@ -29,7 +29,6 @@ public class MainActivity extends FlutterActivity {
     public static final int ADD_PACK = 200;
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private ArrayList<Sticker> stickers = new ArrayList<>();
     private ArrayList<StickerPack> stickerPacks = new ArrayList<>();
 
     @Override
@@ -68,6 +67,7 @@ public class MainActivity extends FlutterActivity {
                           String license_agreement_website,
                           ArrayList sticker) {
         Log.d(TAG, "addToJson: " + tray_image_file);
+        ArrayList<Sticker> stickers = new ArrayList<>();
         for (int i = 0; i < sticker.size(); i++) {
             stickers.add(new Sticker(sticker.get(i).toString(), Arrays.asList("🙂,🙂".split(","))));
         }
