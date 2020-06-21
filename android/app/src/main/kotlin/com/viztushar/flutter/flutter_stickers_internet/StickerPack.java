@@ -6,22 +6,24 @@ import android.os.Parcelable;
 import java.util.List;
 
 public class StickerPack implements Parcelable {
-    public String identifier;
-    public String name;
-    public String publisher;
-    public String trayImageFile;
+    public final String identifier;
+    public final String name;
+    public  final String publisher;
+    public final String trayImageFile;
     public final String publisherEmail;
     public final String publisherWebsite;
     public final String privacyPolicyWebsite;
     public final String licenseAgreementWebsite;
+    public final String imageDataVersion;
+    public  final boolean avoidCache;
 
     public String iosAppStoreLink;
-    public List<Sticker> stickers;
-    public long totalSize;
-    public String androidPlayStoreLink;
-    public boolean isWhitelisted;
+    public  List<Sticker> stickers;
+    public  long totalSize;
+    public  String androidPlayStoreLink;
+    public  boolean isWhitelisted;
 
-    public StickerPack(String identifier, String name, String publisher, String trayImageFile, String publisherEmail, String publisherWebsite, String privacyPolicyWebsite, String licenseAgreementWebsite) {
+    StickerPack(String identifier, String name, String publisher, String trayImageFile, String publisherEmail, String publisherWebsite, String privacyPolicyWebsite, String licenseAgreementWebsite, String imageDataVersion, boolean avoidCache) {
         this.identifier = identifier;
         this.name = name;
         this.publisher = publisher;
@@ -30,6 +32,8 @@ public class StickerPack implements Parcelable {
         this.publisherWebsite = publisherWebsite;
         this.privacyPolicyWebsite = privacyPolicyWebsite;
         this.licenseAgreementWebsite = licenseAgreementWebsite;
+        this.imageDataVersion = imageDataVersion;
+        this.avoidCache = avoidCache;
     }
 
     void setIsWhitelisted(boolean isWhitelisted) {
@@ -40,7 +44,7 @@ public class StickerPack implements Parcelable {
         return isWhitelisted;
     }
 
-    protected StickerPack(Parcel in) {
+    private StickerPack(Parcel in) {
         identifier = in.readString();
         name = in.readString();
         publisher = in.readString();
@@ -54,6 +58,8 @@ public class StickerPack implements Parcelable {
         totalSize = in.readLong();
         androidPlayStoreLink = in.readString();
         isWhitelisted = in.readByte() != 0;
+        imageDataVersion = in.readString();
+        avoidCache = in.readByte() != 0;
     }
 
     public static final Creator<StickerPack> CREATOR = new Creator<StickerPack>() {
@@ -68,7 +74,7 @@ public class StickerPack implements Parcelable {
         }
     };
 
-    public void setStickers(List<Sticker> stickers) {
+    void setStickers(List<Sticker> stickers) {
         this.stickers = stickers;
         totalSize = 0;
         for (Sticker sticker : stickers) {
@@ -76,19 +82,19 @@ public class StickerPack implements Parcelable {
         }
     }
 
-    public void setAndroidPlayStoreLink(String androidPlayStoreLink) {
+    void setAndroidPlayStoreLink(String androidPlayStoreLink) {
         this.androidPlayStoreLink = androidPlayStoreLink;
     }
 
-    public void setIosAppStoreLink(String iosAppStoreLink) {
+    void setIosAppStoreLink(String iosAppStoreLink) {
         this.iosAppStoreLink = iosAppStoreLink;
     }
 
-    public List<Sticker> getStickers() {
+    public  List<Sticker> getStickers() {
         return stickers;
     }
 
-    public long getTotalSize() {
+    long getTotalSize() {
         return totalSize;
     }
 
@@ -112,5 +118,8 @@ public class StickerPack implements Parcelable {
         dest.writeLong(totalSize);
         dest.writeString(androidPlayStoreLink);
         dest.writeByte((byte) (isWhitelisted ? 1 : 0));
+        dest.writeString(imageDataVersion.isEmpty() ? "1" : imageDataVersion);
+        dest.writeByte((byte) (avoidCache ? 1 : 0));
     }
 }
+

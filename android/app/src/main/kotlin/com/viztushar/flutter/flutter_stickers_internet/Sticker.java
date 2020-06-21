@@ -6,16 +6,16 @@ import android.os.Parcelable;
 import java.util.List;
 
 public class Sticker implements Parcelable {
-    public String imageFileName;
-    public List<String> emojis;
+    public final String imageFileName;
+   public final List<String> emojis;
     public long size;
 
-    public Sticker(String imageFileName, List<String> emojis) {
+    Sticker(String imageFileName, List<String> emojis) {
         this.imageFileName = imageFileName;
         this.emojis = emojis;
     }
 
-    protected Sticker(Parcel in) {
+    private Sticker(Parcel in) {
         imageFileName = in.readString();
         emojis = in.createStringArrayList();
         size = in.readLong();

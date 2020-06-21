@@ -81,7 +81,7 @@ public class MainActivity extends FlutterActivity {
                 publisher_email,
                 publisher_website,
                 privacy_policy_website,
-                license_agreement_website);
+                license_agreement_website,"1", true);
 
         stickerPack.setAndroidPlayStoreLink("https://play.google.com/store/apps/details?id=" + getPackageName().toString());
         stickerPack.setIosAppStoreLink("");
@@ -89,7 +89,7 @@ public class MainActivity extends FlutterActivity {
         stickerPack.setStickers(stickers);
         stickerPacks.add(stickerPack);
 
-        Log.d(TAG, "addToJson: " + stickerPacks.get(0).stickers  + " " + sticker.size());
+        //Log.d(TAG, "addToJson: " + stickerPacks.get(0).stickers  + " " + sticker.size());
 
         Stash.put("sticker_pack", stickerPacks);
 
