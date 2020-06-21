@@ -5,13 +5,13 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../models/stickerPacks.dart';
 import '../models/stickers.dart';
 import '../models/model.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'StickerDetails.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:dio/dio.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -53,12 +53,14 @@ class _MyHomePageState extends State<MyHomePage> {
           s.add(Stickers(
               imagefile: stickers['image_file'], emojis: stickers['emojis']));
         }
-        print(
-          json['publisher_email'] + " " +
-          json['publisher_website'] + " " +
-          json['privacy_policy_website'] + " " +
-          json['license_agreement_website'] + " " 
-        );
+        print(json['publisher_email'] +
+            " " +
+            json['publisher_website'] +
+            " " +
+            json['privacy_policy_website'] +
+            " " +
+            json['license_agreement_website'] +
+            " ");
         st.add(StickerPacks(
             identifier: json['identifier'],
             name: json['name'],
@@ -231,32 +233,37 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> addToWhatsapp(StickerPacks s) async {
-try {
-        stickerMethodChannel.invokeMapMethod("addStickerPackToWhatsApp", {
-          "identifier": s.identiFier,
-          "name": s.name
-        });
-      } on PlatformException catch (e) {
-        print(e.details);
-      }
+    try {
+      stickerMethodChannel.invokeMapMethod("addStickerPackToWhatsApp",
+          {"identifier": s.identiFier, "name": s.name});
+    } on PlatformException catch (e) {
+      print(e.details);
+    }
   }
 
   Future<void> downloadSticker(StickerPacks s) async {
-    if(s.publisherEmail == null) s.publisherEmail = "0";
-    print((s.publisherEmail == null ).toString() +
-      s.identiFier + " " +
-          s.name + " " +
-          s.publisher + " " +
-          s.trayImageFile + " "+
-          s.publisherEmail + " " +
-          s.publisherWebsite + " " +
-          s.privacyPolicyWebsite + " " +
-          s.licenseAgreementWebsite.contains("").toString() + " " 
-        );
+    if (s.publisherEmail == null) s.publisherEmail = "0";
+    print((s.publisherEmail == null).toString() +
+        s.identiFier +
+        " " +
+        s.name +
+        " " +
+        s.publisher +
+        " " +
+        s.trayImageFile +
+        " " +
+        s.publisherEmail +
+        " " +
+        s.publisherWebsite +
+        " " +
+        s.privacyPolicyWebsite +
+        " " +
+        s.licenseAgreementWebsite.contains("").toString() +
+        " ");
 
     stickerImageList.clear();
     if (!downloadList.contains(s.identiFier)) {
-      await PermissionHandler().requestPermissions([PermissionGroup.storage]);
+      await Permission.storage.request();
       Dio dio = Dio();
       var dirToSave = await getApplicationDocumentsDirectory();
       var path = await Directory(dirToSave.path +
