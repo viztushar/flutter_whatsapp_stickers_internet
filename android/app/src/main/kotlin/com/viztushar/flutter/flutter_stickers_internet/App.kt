@@ -14,6 +14,7 @@ class App : Application() {
         super.onCreate()
         Stash.init(this)
         FlutterMain.startInitialization(this)
+
     }
 
 }

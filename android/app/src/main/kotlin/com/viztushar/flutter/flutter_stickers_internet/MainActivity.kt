@@ -2,45 +2,41 @@ package com.viztushar.flutter.flutter_stickers_internet
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Messenger
 import android.util.Log
 import android.view.Gravity
 import android.widget.Toast
 import com.fxn.stash.Stash
-import com.viztushar.flutter.flutter_stickers_internet.MainActivity
-import com.viztushar.flutter.flutter_stickers_internet.StickerPack
-import io.flutter.app.FlutterActivity
+import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.BinaryMessenger
+import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugin.common.PluginRegistry
 import io.flutter.plugins.GeneratedPluginRegistrant
 import java.util.*
+import kotlin.collections.ArrayList
 
-class MainActivity : FlutterActivity() {
+
+class MainActivity : FlutterActivity(), MethodChannel.MethodCallHandler {
     private var stickerPacks = ArrayList<StickerPack>()
-    override fun onCreate(savedInstanceState: Bundle) {
-        super.onCreate(savedInstanceState)
-        GeneratedPluginRegistrant.registerWith(this)
-        Log.d(TAG, "onCreate: " + applicationInfo.dataDir)
-        stickerPacks = Stash.getArrayList("sticker_pack", StickerPack::class.java)
-        MethodChannel(flutterView, CHANNEL).setMethodCallHandler { call, result ->
-            if (call.method == "addTOJson") {
-                Log.d(TAG, "onMethodCall: " + call.argument("identiFier"))
-                Log.d(TAG,
-                        call.argument<Any>("identiFier").toString() + " " + call.argument("name") + " " +
-                                call.argument("publisher") + " " + call.argument("trayimagefile") + " " +
-                                call.argument("publisheremail") + " " + call.argument("publisherwebsite") + " " +
-                                call.argument("privacypolicywebsite") + " " + call.argument("licenseagreementwebsite") + " " +
-                                call.argument("sticker_image")
-                )
-                addToJson(call.argument("identiFier"), call.argument("name"),
-                        call.argument("publisher"), call.argument("trayimagefile"),
-                        call.argument("publisheremail"), call.argument("publisherwebsite"),
-                        call.argument("privacypolicywebsite"), call.argument("licenseagreementwebsite"),
-                        Objects.requireNonNull(call.argument("sticker_image")))
-            } else if (call.method == "addStickerPackToWhatsApp") {
-                addStickerPackToWhatsApp(call.argument("identifier"), call.argument("name"))
-            }
-        }
+//    override fun onCreate(savedInstanceState: Bundle) {
+//        super.onCreate(savedInstanceState)
+//        GeneratedPluginRegistrant.registerWith(this)
+//        Log.d(TAG, "onCreate: " + applicationInfo.dataDir)
+//        stickerPacks = Stash.getArrayList("sticker_pack", StickerPack::class.java)
+//        MethodChannel(flutterView, CHANNEL).setMethodCallHandler { call, result ->
+//
+//        }
+//    }
+
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        super.configureFlutterEngine(flutterEngine)
+        methodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
+        methodChannel.setMethodCallHandler(this)
     }
 
     fun addToJson(identifier: String?, name: String?, publisher: String?,
@@ -102,7 +98,7 @@ class MainActivity : FlutterActivity() {
         }
     }
 
-    protected fun addStickerPackToWhatsApp(identifier: String?, stickerPackName: String?) {
+    fun addStickerPackToWhatsApp(identifier: String?, stickerPackName: String?) {
         try {
             //if neither WhatsApp Consumer or WhatsApp Business is installed, then tell user to install the apps.
             if (!WhitelistCheck.isWhatsAppConsumerAppInstalled(packageManager) && !WhitelistCheck.isWhatsAppSmbAppInstalled(packageManager)) {
@@ -163,5 +159,26 @@ class MainActivity : FlutterActivity() {
         const val EXTRA_STICKER_PACK_NAME = "sticker_pack_name"
         const val ADD_PACK = 200
         private val TAG = MainActivity::class.java.simpleName
+        lateinit var methodChannel: MethodChannel
+    }
+
+    override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
+        if (call.method == "addTOJson") {
+            Log.d(TAG, "onMethodCall: " + call.argument("identiFier"))
+            Log.d(TAG,
+                    call.argument<Any>("identiFier").toString() + " " + call.argument("name") + " " +
+                            call.argument("publisher") + " " + call.argument("trayimagefile") + " " +
+                            call.argument("publisheremail") + " " + call.argument("publisherwebsite") + " " +
+                            call.argument("privacypolicywebsite") + " " + call.argument("licenseagreementwebsite") + " " +
+                            call.argument("sticker_image")
+            )
+            addToJson(call.argument("identiFier"), call.argument("name"),
+                    call.argument("publisher"), call.argument("trayimagefile"),
+                    call.argument("publisheremail"), call.argument("publisherwebsite"),
+                    call.argument("privacypolicywebsite"), call.argument("licenseagreementwebsite"),
+                    Objects.requireNonNull(call.argument("sticker_image")))
+        } else if (call.method == "addStickerPackToWhatsApp") {
+            addStickerPackToWhatsApp(call.argument("identifier"), call.argument("name"))
+        }
     }
 }
