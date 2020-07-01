@@ -12,3 +12,7 @@ whatsapp stickers app using internet and with flutter
 ## HOW-TO-WIKI
 
 [Wiki](https://github.com/viztushar/flutter_whatsapp_stickers_internet/wiki)
+
+
+## For more help
+Join this [Whatsapp group](https://chat.whatsapp.com/GskUyZUgDpaE7aHBLOB4tS)
