@@ -23,8 +23,7 @@ class _MyHomePageState extends State<MyHomePage> {
   static const MethodChannel stickerMethodChannel = const MethodChannel(
       'com.viztushar.flutter.flutter_stickers_internet/sharedata');
   final String url =
-      'https://raw.githubusercontent.com/08jeevan/stickerss/main/stickersanimated';
-  //'https://gist.githubusercontent.com/viztushar/e359e5aeadc4fcfece7b48149fb580fe/raw/47e92af7485fdd2c48d0e0d8ac46e0b2dbb13418/whatsapp.json';
+      'https://gist.githubusercontent.com/viztushar/e359e5aeadc4fcfece7b48149fb580fe/raw/47e92af7485fdd2c48d0e0d8ac46e0b2dbb13418/whatsapp.json';
   StickerPacks stickerPack = StickerPacks();
   List<StickerPacks> st = List<StickerPacks>();
   bool isLoading, isDownloading = true;
