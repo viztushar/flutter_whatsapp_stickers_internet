@@ -23,7 +23,8 @@ class _MyHomePageState extends State<MyHomePage> {
   static const MethodChannel stickerMethodChannel = const MethodChannel(
       'com.viztushar.flutter.flutter_stickers_internet/sharedata');
   final String url =
-      'https://gist.githubusercontent.com/viztushar/e359e5aeadc4fcfece7b48149fb580fe/raw/47e92af7485fdd2c48d0e0d8ac46e0b2dbb13418/whatsapp.json';
+      'https://raw.githubusercontent.com/08jeevan/stickerss/main/stickersanimated';
+  //'https://gist.githubusercontent.com/viztushar/e359e5aeadc4fcfece7b48149fb580fe/raw/47e92af7485fdd2c48d0e0d8ac46e0b2dbb13418/whatsapp.json';
   StickerPacks stickerPack = StickerPacks();
   List<StickerPacks> st = List<StickerPacks>();
   bool isLoading, isDownloading = true;
@@ -46,6 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
     setState(() {
       Map datas = jsonDecode(response.body);
+      print(datas);
       Model m = Model.formJson(datas);
       for (Map<String, dynamic> json in m.stickerPac) {
         List<Stickers> s = List<Stickers>();
@@ -60,7 +62,12 @@ class _MyHomePageState extends State<MyHomePage> {
             json['privacy_policy_website'] +
             " " +
             json['license_agreement_website'] +
-            " ");
+            " " +
+            json['image_data_version'] +
+            " " +
+            json['avoid_cache'].toString() +
+            " " +
+            json['animated_sticker_pack'].toString());
         st.add(StickerPacks(
             identifier: json['identifier'],
             name: json['name'],
@@ -70,6 +77,9 @@ class _MyHomePageState extends State<MyHomePage> {
             publisherwebsite: json['publisher_website'],
             privacypolicywebsite: json['privacy_policy_website'],
             licenseagreementwebsite: json['license_agreement_website'],
+            imagedataversion: json['image_data_version'],
+            avoidcache: json['avoid_cache'],
+            animatedstickerpack: json['animated_sticker_pack'],
             stickers: s));
       }
       isLoading = false;
@@ -83,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     }));
   }
- 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -259,6 +269,12 @@ class _MyHomePageState extends State<MyHomePage> {
         s.privacyPolicyWebsite +
         " " +
         s.licenseAgreementWebsite.contains("").toString() +
+        " " +
+        s.imageDataVersion.toString() +
+        " " +
+        s.avoidcache.toString() +
+        " " +
+        s.animatedstickerpack.toString() +
         " ");
 
     stickerImageList.clear();
@@ -310,6 +326,9 @@ class _MyHomePageState extends State<MyHomePage> {
           "privacypolicywebsite": s.privacyPolicyWebsite,
           "licenseagreementwebsite": s.licenseAgreementWebsite,
           "sticker_image": stickerImageList,
+          "avoidCache": s.avoidcache,
+          "animatedStickerPack": s.animatedstickerpack,
+          "imageDataVersion": s.imagedataversion
         });
       } on PlatformException catch (e) {
         print(e.details);

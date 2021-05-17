@@ -129,16 +129,17 @@ class _MyStickerDetailsState extends State<MyStickerDetails> {
                               .contains(widget.stickerPacks.identiFier)) {
                             isDownloading = false;
                             print(isLoading);
-                            downloadSticker(widget.stickerPacks,context);
+                            downloadSticker(widget.stickerPacks, context);
                           } else if (downloadList
                               .contains(widget.stickerPacks.identiFier)) {
-                                            addToWhatsapp(widget.stickerPacks);
-                              }
+                            addToWhatsapp(widget.stickerPacks);
+                          }
                         },
                         color: Colors.black,
                         child: Text(
-                          downloadList
-                              .contains(widget.stickerPacks.identiFier) ? 'Add To WhatsApp' : "Download",
+                          downloadList.contains(widget.stickerPacks.identiFier)
+                              ? 'Add To WhatsApp'
+                              : "Download",
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 18.0,
@@ -154,7 +155,7 @@ class _MyStickerDetailsState extends State<MyStickerDetails> {
     );
   }
 
-Future<void> addToWhatsapp(StickerPacks s) async {
+  Future<void> addToWhatsapp(StickerPacks s) async {
     try {
       stickerMethodChannel.invokeMapMethod("addStickerPackToWhatsApp",
           {"identifier": s.identiFier, "name": s.name});
@@ -163,7 +164,7 @@ Future<void> addToWhatsapp(StickerPacks s) async {
     }
   }
 
-  Future<void> downloadSticker(StickerPacks s,context) async {
+  Future<void> downloadSticker(StickerPacks s, context) async {
     showDialogs(context);
     if (s.publisherEmail == null) s.publisherEmail = "0";
     print((s.publisherEmail == null).toString() +
@@ -223,7 +224,7 @@ Future<void> addToWhatsapp(StickerPacks s) async {
       }
 
       try {
-         stickerMethodChannel.invokeMapMethod("addTOJson", {
+        stickerMethodChannel.invokeMapMethod("addTOJson", {
           "identiFier": s.identiFier,
           "name": s.name,
           "publisher": s.publisher,
@@ -233,6 +234,9 @@ Future<void> addToWhatsapp(StickerPacks s) async {
           "privacypolicywebsite": s.privacyPolicyWebsite,
           "licenseagreementwebsite": s.licenseAgreementWebsite,
           "sticker_image": stickerImageList,
+          "avoidCache": s.avoidcache,
+          "animatedStickerPack": s.animatedstickerpack,
+          "imageDataVersion": s.imagedataversion
         });
       } on PlatformException catch (e) {
         print(e.details);
@@ -249,7 +253,7 @@ Future<void> addToWhatsapp(StickerPacks s) async {
     }
   }
 
-Future<void> showDialogs(context) {
+  Future<void> showDialogs(context) {
     CupertinoAlertDialog s = CupertinoAlertDialog(
       content: Row(
         children: <Widget>[
@@ -278,10 +282,10 @@ Future<void> showDialogs(context) {
       context: context,
       barrierDismissible: false,
       builder: (context) {
-        if(Platform.isAndroid)
-        return a;
+        if (Platform.isAndroid)
+          return a;
         else
-        return s;
+          return s;
       },
     );
   }

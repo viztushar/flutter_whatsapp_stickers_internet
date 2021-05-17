@@ -14,6 +14,7 @@ object WhitelistCheck {
     private const val CONTENT_PROVIDER = ".provider.sticker_whitelist_check"
     private const val QUERY_PATH = "is_whitelisted"
     private const val QUERY_RESULT_COLUMN_NAME = "result"
+    
     fun isWhitelisted(context: Context, identifier: String): Boolean {
         return try {
             if (!isWhatsAppConsumerAppInstalled(context.packageManager) && !isWhatsAppSmbAppInstalled(context.packageManager)) {

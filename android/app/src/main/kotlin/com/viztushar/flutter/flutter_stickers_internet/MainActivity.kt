@@ -42,12 +42,14 @@ class MainActivity : FlutterActivity(), MethodChannel.MethodCallHandler {
     fun addToJson(identifier: String?, name: String?, publisher: String?,
                   tray_image_file: String?, publisher_email: String?, publisher_website: String?, privacy_policy_website: String?,
                   license_agreement_website: String?,
-                  sticker: ArrayList<*>) {
+                  sticker: ArrayList<*>, avoidCache: Boolean?, animatedStickerPack:Boolean? ,imageDataVersion: String?) {
         Log.d(TAG, "addToJson: $tray_image_file")
         val stickers = ArrayList<Sticker>()
         for (i in sticker.indices) {
             stickers.add(Sticker(sticker[i].toString(), Arrays.asList(*"🙂,🙂".split(",".toRegex()).toTypedArray())))
         }
+
+
         val stickerPack = StickerPack(
                 identifier,
                 name,
@@ -56,7 +58,7 @@ class MainActivity : FlutterActivity(), MethodChannel.MethodCallHandler {
                 publisher_email,
                 publisher_website,
                 privacy_policy_website,
-                license_agreement_website, "1", true)
+                license_agreement_website, imageDataVersion, avoidCache!!,animatedStickerPack!!)
         stickerPack.setAndroidPlayStoreLink("https://play.google.com/store/apps/details?id=$packageName")
         stickerPack.setIosAppStoreLink("")
         stickerPack.setStickers(stickers)
@@ -170,13 +172,15 @@ class MainActivity : FlutterActivity(), MethodChannel.MethodCallHandler {
                             call.argument("publisher") + " " + call.argument("trayimagefile") + " " +
                             call.argument("publisheremail") + " " + call.argument("publisherwebsite") + " " +
                             call.argument("privacypolicywebsite") + " " + call.argument("licenseagreementwebsite") + " " +
-                            call.argument("sticker_image")
+                            call.argument("sticker_image") + " " + call.argument("avoidCache") + " "+  call.argument("animatedStickerPack")
+                            + " " +call.argument("imageDataVersion")
             )
             addToJson(call.argument("identiFier"), call.argument("name"),
                     call.argument("publisher"), call.argument("trayimagefile"),
                     call.argument("publisheremail"), call.argument("publisherwebsite"),
                     call.argument("privacypolicywebsite"), call.argument("licenseagreementwebsite"),
-                    Objects.requireNonNull(call.argument("sticker_image")))
+                    Objects.requireNonNull(call.argument("sticker_image")),call.argument("avoidCache"),
+                call.argument("animatedStickerPack"),call.argument("imageDataVersion"))
         } else if (call.method == "addStickerPackToWhatsApp") {
             addStickerPackToWhatsApp(call.argument("identifier"), call.argument("name"))
         }
